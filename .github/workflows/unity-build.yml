@@ -1,0 +1,38 @@
+name: Build‑Android (Pocket‑Digger)
+
+on:
+  push:
+    branches: [prototype, main]
+  workflow_dispatch:
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1 – pull code
+      - uses: actions/checkout@v4
+
+      # 2 – cache Library folder (cuts build time ~50 %)
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-Android-${{ hashFiles('**/Assets/**', '**/ProjectSettings/**') }}
+          restore-keys: Library-Android-
+
+      # 3 – build with Game‑CI Unity Builder
+      - name: Build Android APK
+        uses: game-ci/unity-builder@v3
+        with:
+          unityVersion: 2022.3.24f1     # keep in sync with local editor
+          targetPlatform: Android
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL:   ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD:${{ secrets.UNITY_PASSWORD }}
+
+      # 4 – upload artifact for DeployGate
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PocketDigger‑apk
+          path: build/Android/*.apk

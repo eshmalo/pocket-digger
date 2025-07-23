@@ -41,6 +41,7 @@ jobs:
           targetPlatform: Android
           buildMethod: UnityBuilderAction.BuildScript.Build
         env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
 

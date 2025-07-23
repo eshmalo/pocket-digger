@@ -20,22 +20,16 @@ jobs:
           key: Library-Android-${{ hashFiles('**/Assets/**', '**/ProjectSettings/**') }}
           restore-keys: Library-Android-
 
-      # 3 – Activate Unity license
-      - name: Activate Unity
-        uses: game-ci/unity-activate@v2
+      # 3 – build with Game‑CI Unity Builder
+      - name: Build Android APK
+        uses: game-ci/unity-builder@v4
         with:
-          unityVersion: 2022.3.24f1
+          unityVersion: 2022.3.21f1     # Unity 2022 LTS with known good image
+          targetPlatform: Android
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
           UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
-
-      # 4 – build with Game‑CI Unity Builder
-      - name: Build Android APK
-        uses: game-ci/unity-builder@v4
-        with:
-          unityVersion: 2022.3.24f1     # Unity 2022 LTS
-          targetPlatform: Android
 
       # 5 – Return license
       - name: Return license

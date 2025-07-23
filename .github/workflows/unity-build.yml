@@ -20,29 +20,35 @@ jobs:
           key: Library-Android-${{ hashFiles('**/Assets/**', '**/ProjectSettings/**') }}
           restore-keys: Library-Android-
 
-      # 3 – build with Game‑CI Unity Builder
+      # 3 – Activate Unity license
+      - name: Activate Unity
+        uses: game-ci/unity-activate@v2
+        with:
+          unityVersion: 2022.3.24f1
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL: ${{ secrets.UNITY_SERIAL }}
+
+      # 4 – build with Game‑CI Unity Builder
       - name: Build Android APK
         uses: game-ci/unity-builder@v4
         with:
           unityVersion: 2022.3.24f1     # Unity 2022 LTS
           targetPlatform: Android
-        env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
-          UNITY_EMAIL:   ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD:${{ secrets.UNITY_PASSWORD }}
 
-      # 4 – Return license
+      # 5 – Return license
       - name: Return license
         uses: game-ci/unity-return-license@v2
         if: always()
 
-      # 5 – upload artifact for DeployGate
+      # 6 – upload artifact for DeployGate
       - uses: actions/upload-artifact@v4
         with:
           name: PocketDigger‑apk
           path: build/Android/*.apk
       
-      # 6 – Upload to DeployGate (optional)
+      # 7 – Upload to DeployGate (optional)
       - name: Upload to DeployGate
         if: success() && github.event_name == 'push'
         run: |

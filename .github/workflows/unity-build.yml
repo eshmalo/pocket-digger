@@ -20,16 +20,28 @@ jobs:
           key: Library-Android-${{ hashFiles('**/Assets/**', '**/ProjectSettings/**') }}
           restore-keys: Library-Android-
 
-      # 3 – build with Game‑CI Unity Builder
+      # 3 – Request activation (for Unity 6)
+      - name: Request manual activation file
+        uses: game-ci/unity-request-activation-file@v2
+        id: getManualLicenseFile
+        with:
+          unityVersion: 6000.1.13f1
+
+      # 4 – Return license
+      - name: Return license
+        uses: game-ci/unity-return-license@v2
+        if: always()
+
+      # 5 – build with Game‑CI Unity Builder
       - name: Build Android APK
         uses: game-ci/unity-builder@v3
         with:
-          unityVersion: 2022.3.24f1     # keep in sync with local editor
+          unityVersion: 6000.1.13f1     # Unity 6 LTS
           targetPlatform: Android
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL:   ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD:${{ secrets.UNITY_PASSWORD }}
+          UNITY_SERIAL:  ${{ secrets.UNITY_SERIAL }}
 
       # 4 – upload artifact for DeployGate
       - uses: actions/upload-artifact@v4

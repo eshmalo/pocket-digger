@@ -22,14 +22,14 @@ jobs:
 
       # 3 – build with Game‑CI Unity Builder
       - name: Build Android APK
-        uses: game-ci/unity-builder@v3
+        uses: game-ci/unity-builder@v4
         with:
-          unityVersion: 6000.1.13f1     # Unity 6 LTS
+          unityVersion: 2022.3.24f1     # Unity 2022 LTS
           targetPlatform: Android
         env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL:   ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD:${{ secrets.UNITY_PASSWORD }}
-          UNITY_SERIAL:  ${{ secrets.UNITY_SERIAL }}
 
       # 4 – Return license
       - name: Return license
@@ -41,3 +41,13 @@ jobs:
         with:
           name: PocketDigger‑apk
           path: build/Android/*.apk
+      
+      # 6 – Upload to DeployGate (optional)
+      - name: Upload to DeployGate
+        if: success() && github.event_name == 'push'
+        run: |
+          if [ -n "${{ secrets.DEPLOYGATE_API_TOKEN }}" ]; then
+            bash deploy-to-deploygate.sh eshmalo
+          fi
+        env:
+          DEPLOYGATE_API_TOKEN: ${{ secrets.DEPLOYGATE_API_TOKEN }}

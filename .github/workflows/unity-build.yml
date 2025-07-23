@@ -6,34 +6,38 @@ on:
   workflow_dispatch:
 
 jobs:
-  buildForAndroidPlatform:
-    name: Build For Android Platform
+  build:
+    name: Build for Android
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
 
+      # Cache
       - uses: actions/cache@v3
         with:
           path: Library
-          key: Library-Android
+          key: Library-Android-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-Android-
+            Library-
 
-      - uses: game-ci/unity-builder@v4
+      # Build
+      - name: Build project
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: Android
           unityVersion: 2021.3.21f1
-          buildsPath: build
-          buildName: PocketDigger
-          androidAppBundle: false
-          androidKeystoreName: ""
-          androidKeystoreBase64: ""
-          androidKeystorePass: ""
-          androidKeyaliasName: ""
-          androidKeyaliasPass: ""
-          androidTargetSdkVersion: AndroidApiLevelAuto
-          androidExportType: androidPackage
-          buildMethod: ""
 
+      # Upload APK
       - uses: actions/upload-artifact@v4
         with:
           name: Build-Android
-          path: build/Android
+          path: build/Android/*.apk

@@ -1,4 +1,4 @@
-name: Build‑Android (Pocket‑Digger)
+name: Build Android APK
 
 on:
   push:
@@ -6,27 +6,21 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  buildAndroid:
     name: Build for Android
     runs-on: ubuntu-latest
+    
     steps:
-      # Checkout
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           lfs: true
-
-      # Cache
+          
       - uses: actions/cache@v3
         with:
           path: Library
-          key: Library-Android-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-          restore-keys: |
-            Library-Android-
-            Library-
-
-      # Build
-      - name: Build project
+          key: Library-Android
+          
+      - name: Build Unity Project
         uses: game-ci/unity-builder@v4
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -35,9 +29,16 @@ jobs:
         with:
           targetPlatform: Android
           unityVersion: 2021.3.21f1
-
-      # Upload APK
+          androidExportType: androidPackage
+          androidKeystoreName: ""
+          androidKeystoreBase64: ""
+          androidKeystorePass: ""
+          androidKeyaliasName: ""
+          androidKeyaliasPass: ""
+          androidTargetSdkVersion: AndroidApiLevelAuto
+          androidSdkManagerParameters: "platforms;android-30 platforms;android-31 build-tools;30.0.3"
+          
       - uses: actions/upload-artifact@v4
         with:
-          name: Build-Android
+          name: Android-APK
           path: build/Android/*.apk

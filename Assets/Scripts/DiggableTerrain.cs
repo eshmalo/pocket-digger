@@ -12,6 +12,8 @@ public class DiggableTerrain : MonoBehaviour
     private PolygonCollider2D _poly;
     private bool _needsColliderUpdate = false;
     private float _colliderUpdateTimer = 0f;
+    private int _totalPixels;
+    private int _remainingPixels;
 
     private void Awake()
     {
@@ -30,6 +32,9 @@ public class DiggableTerrain : MonoBehaviour
 
         _poly = GetComponent<PolygonCollider2D>();
         UpdateCollider();
+        
+        _totalPixels = textureSize * textureSize;
+        _remainingPixels = _totalPixels;
     }
 
     private void Update()
@@ -64,8 +69,14 @@ public class DiggableTerrain : MonoBehaviour
             int px = (int)local.x + x;
             int py = (int)local.y + y;
             if (px < 0 || px >= textureSize || py < 0 || py >= textureSize) continue;
-            _tex.SetPixel(px, py, Color.clear);
-            pixelsChanged = true;
+            
+            // Only erase if pixel is not already clear
+            if (_tex.GetPixel(px, py).a > 0)
+            {
+                _tex.SetPixel(px, py, Color.clear);
+                pixelsChanged = true;
+                _remainingPixels--;
+            }
         }
         
         if (pixelsChanged)
@@ -82,5 +93,15 @@ public class DiggableTerrain : MonoBehaviour
         Destroy(_poly);
         _poly = gameObject.AddComponent<PolygonCollider2D>();
         _poly.isTrigger = false;
+    }
+    
+    public float GetRemainingPixelPercentage()
+    {
+        return (float)_remainingPixels / _totalPixels;
+    }
+    
+    public int GetRemainingPixels()
+    {
+        return _remainingPixels;
     }
 }

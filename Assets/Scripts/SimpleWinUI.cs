@@ -31,7 +31,7 @@ public class SimpleWinUI : MonoBehaviour
         textGO.transform.SetParent(canvasGO.transform, false);
         
         winText = textGO.AddComponent<TextMeshProUGUI>();
-        winText.text = "Level Complete!";
+        winText.text = "Gem Revealed!";
         winText.fontSize = 72;
         winText.color = Color.white;
         winText.alignment = TextAlignmentOptions.Center;

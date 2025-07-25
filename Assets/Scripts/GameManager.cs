@@ -3,15 +3,43 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    private int marblesToWin = 20;
-    public TMP_Text scoreText;  // Made public for GameBootstrap
-    private int _score;
-
-    public void AddScore()
+    private float gameTime = 0f;
+    private bool isGameComplete = false;
+    private LayerStack layerStack;
+    private UIProgress progressUI;
+    
+    void Start()
     {
-        _score++;
-        scoreText.text = $"{_score}/{marblesToWin}";
-        if (_score >= marblesToWin) Invoke(nameof(LevelComplete), 0.3f);
+        layerStack = FindObjectOfType<LayerStack>();
+        progressUI = FindObjectOfType<UIProgress>();
+        
+        if (progressUI != null && layerStack != null)
+        {
+            progressUI.SetLayerInfo(1, layerStack.GetTotalLayers());
+        }
+    }
+    
+    void Update()
+    {
+        if (!isGameComplete)
+        {
+            gameTime += Time.deltaTime;
+            
+            // Update layer info
+            if (progressUI != null && layerStack != null)
+            {
+                int currentLayer = layerStack.GetCurrentLayerIndex() + 1;
+                progressUI.SetLayerInfo(currentLayer, layerStack.GetTotalLayers());
+            }
+        }
+    }
+    
+    public void OnGemRevealed()
+    {
+        if (isGameComplete) return;
+        
+        isGameComplete = true;
+        LevelComplete();
     }
 
     private void LevelComplete()
@@ -34,12 +62,13 @@ public class GameManager : MonoBehaviour
         UnityEngine.SceneManagement.SceneManager.LoadScene(
             UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
     }
-
-    private void Start() => scoreText.text = $"0/{marblesToWin}";
-
-    public void SetMarblesToWin(int count)
+    
+    public string GetCompletionGrade()
     {
-        marblesToWin = count;
-        scoreText.text = $"0/{marblesToWin}";
+        // Grade based on completion time
+        if (gameTime < 30f) return "S";
+        if (gameTime < 45f) return "A";
+        if (gameTime < 60f) return "B";
+        return "C";
     }
 }

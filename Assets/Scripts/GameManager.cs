@@ -3,8 +3,8 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private int marblesToWin = 20;
-    [SerializeField] private TMP_Text scoreText;
+    private int marblesToWin = 20;
+    public TMP_Text scoreText;  // Made public for GameBootstrap
     private int _score;
 
     public void AddScore()

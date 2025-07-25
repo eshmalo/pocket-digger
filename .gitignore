@@ -85,3 +85,41 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
+env/
+.venv
+
+# Kivy
+.kivy/
+
+# Buildozer
+.buildozer/
+bin/
+
+# Android signing - NEVER commit these!
+*.keystore
+*.jks
+keystore.properties
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Build artifacts
+build/
+dist/
+*.egg-info/

@@ -1,24 +1,45 @@
 using UnityEngine;
-using UnityEngine.UI;  // Use standard UI for now
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private int marblesToWin = 20;
-    [SerializeField] private Text scoreText;  // Regular UI Text
+    [SerializeField] private TMP_Text scoreText;
     private int _score;
 
-    public void AddScore()   // call from Marble.cs
+    public void AddScore()
     {
         _score++;
-        if (scoreText != null)
-            scoreText.text = _score + " / " + marblesToWin;
-        if (_score >= marblesToWin) LevelComplete();
+        scoreText.text = $"{_score}/{marblesToWin}";
+        if (_score >= marblesToWin) Invoke(nameof(LevelComplete), 0.3f);
     }
 
     private void LevelComplete()
     {
-        Time.timeScale = 0;
-        Debug.Log("Level Complete! Score: " + _score);
-        // TODO: show level‑complete UI, offer rewarded‑ad 2× coins
+        // Show win UI
+        SimpleWinUI winUI = FindObjectOfType<SimpleWinUI>();
+        if (winUI == null)
+        {
+            GameObject winUIGO = new GameObject("WinUIManager");
+            winUI = winUIGO.AddComponent<SimpleWinUI>();
+        }
+        winUI.ShowWinUI();
+        
+        // Restart after 2 seconds
+        Invoke(nameof(RestartLevel), 2f);
+    }
+    
+    private void RestartLevel()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(
+            UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private void Start() => scoreText.text = $"0/{marblesToWin}";
+
+    public void SetMarblesToWin(int count)
+    {
+        marblesToWin = count;
+        scoreText.text = $"0/{marblesToWin}";
     }
 }

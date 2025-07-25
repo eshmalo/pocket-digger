@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class MarbleSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject marblePrefab;
-    [SerializeField] private float spawnInterval = 0.4f;   // 25 per 10 s
+    public GameObject marblePrefab;
+    public float spawnInterval = 0.4f;   // 25 per 10 s
 
     private float _timer;
 

@@ -1,6 +1,5 @@
 using UnityEngine;
 using TMPro;
-using Destructible2D;
 
 public static class GameBootstrap
 {
@@ -105,13 +104,12 @@ public static class GameBootstrap
         go.tag = "Terrain";
         
         var sr = go.AddComponent<SpriteRenderer>();
-        sr.sprite = RuntimeSpriteFactory.MakeSquareSprite(512, new Color32(0x8B, 0x5A, 0x2B, 0xFF)); // brown
+        go.AddComponent<PolygonCollider2D>();
+        var dt = go.AddComponent<DiggableTerrain>();
+        dt.textureSize = 512;
+        dt.fillColor = new Color32(0x8B, 0x5A, 0x2B, 0xFF); // brown
         
         go.transform.localScale = new Vector3(10, 8, 1);
-        
-        // Add Destructible2D components
-        var d2d = go.AddComponent<D2dDestructible>();
-        go.AddComponent<D2dCollider>();
         
         return go;
     }
@@ -138,7 +136,7 @@ public static class GameBootstrap
     private static void BuildDigController(GameObject terrain)
     {
         var dc = new GameObject("DigController").AddComponent<DigController>();
-        // DigController will handle its own setup
+        dc.brushRadius = 0.35f;
     }
 
     private static void BuildMarbleSpawner(GameObject marblePrefab)

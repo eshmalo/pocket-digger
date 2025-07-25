@@ -10,6 +10,13 @@ from kivy.properties import NumericProperty, ListProperty
 from random import random, randint
 import math
 
+# Try to import plyer for haptic feedback
+try:
+    from plyer import vibrator
+    HAS_VIBRATOR = True
+except:
+    HAS_VIBRATOR = False
+
 
 class Layer(Widget):
     """Single colorful layer that can be sliced"""
@@ -215,12 +222,20 @@ class LayerSliceGame(FloatLayout):
                         # Update score
                         self.score += 10
                         
+                        # Haptic feedback
+                        if HAS_VIBRATOR:
+                            vibrator.vibrate(0.01)  # Quick pulse
+                        
                         # Check if layer completed
                         progress = 1 - (layer.pixels_remaining / (layer.texture_size ** 2))
                         if progress > 0.85:  # 85% cleared
                             layer.pixels_remaining = 0
                             self.score += 500
                             self.score_label.text = f'Layer {layer.layer_index + 1} complete! Score: {self.score}'
+                            
+                            # Stronger vibration for layer complete
+                            if HAS_VIBRATOR:
+                                vibrator.vibrate(0.05)
                     break
         
         self.last_touch = (touch.x, touch.y)

@@ -1,16 +1,19 @@
 [app]
 
 # (str) Title of your application
-title = Marble Collector
+title = Layer Slice
 
 # (str) Package name
-package.name = marblecollector
+package.name = layerslice
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = com.yourgame
 
 # (str) Source code where the main.py live
 source.dir = .
+
+# (str) Main python file to run
+source.main = layer_slice_game.py
 
 # (list) Source files to include (let empty to include all the files)
 source.include_exts = py,png,jpg,kv,atlas
@@ -37,7 +40,7 @@ version = 0.1
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,pillow
+requirements = python3,kivy,pillow,plyer
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes

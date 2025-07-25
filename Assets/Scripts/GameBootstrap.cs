@@ -109,7 +109,8 @@ public static class GameBootstrap
         dt.textureSize = 512;
         dt.fillColor = new Color32(0x8B, 0x5A, 0x2B, 0xFF); // brown
         
-        go.transform.localScale = new Vector3(10, 8, 1);
+        go.transform.localScale = new Vector3(12, 10, 1);
+        go.transform.position = new Vector3(0, -0.5f, 0);  // Move terrain down slightly
         
         return go;
     }

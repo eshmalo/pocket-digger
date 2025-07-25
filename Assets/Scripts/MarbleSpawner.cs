@@ -13,7 +13,8 @@ public class MarbleSpawner : MonoBehaviour
         if (_timer >= spawnInterval)
         {
             _timer = 0;
-            Instantiate(marblePrefab, transform.position, Quaternion.identity);
+            var marble = Instantiate(marblePrefab, transform.position, Quaternion.identity);
+            marble.SetActive(true);  // Ensure spawned marbles are active
         }
     }
 }

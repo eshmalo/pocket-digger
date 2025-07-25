@@ -140,6 +140,10 @@ class MarbleCollectorApp(App):
         # Set window background color
         Window.clearcolor = (0.1, 0.1, 0.1, 1)
         
+        # Optimize for mobile
+        from kivy.config import Config
+        Config.set('graphics', 'multisamples', '0')  # Disable anti-aliasing for performance
+        
         # Create and return the game widget
         game = GameWidget()
         return game

@@ -16,17 +16,32 @@ A simple marble collection game built with Python and Kivy framework.
 
 ## Building for Android
 
-1. **Build AAB for Google Play:**
-   ```bash
-   buildozer android release
-   ```
+### Option A: Docker Build (Recommended - 20-25 min)
+```bash
+# Install Docker Desktop first
+brew install --cask docker
 
-2. **Build APK for testing:**
-   ```bash
-   buildozer android debug
-   ```
+# Run build script
+./build_docker.sh
+```
 
-The built files will be in the `bin/` directory.
+### Option B: Native macOS Build (30-60 min)
+```bash
+# Install build tools
+brew install autoconf automake libtool pkg-config cmake openssl@3
+
+# Use build script
+./build_android.sh
+```
+
+### Build Outputs
+- **Debug APK**: `bin/marblecollector-0.1-arm64-v8a_armeabi-v7a-debug.apk`
+- **Release AAB**: `bin/marblecollector-0.1-arm64-v8a_armeabi-v7a-release.aab`
+
+### First Build Notes
+- First build downloads Android SDK/NDK (~2GB)
+- Subsequent builds take only 2-3 minutes
+- Docker approach avoids macOS-specific issues
 
 ## Game Controls
 
